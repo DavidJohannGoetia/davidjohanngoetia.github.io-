@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>David Johann Goetia</title>
+<meta name="description" content="David Johann Goetia — building toward research in spatial intelligence and world models." />
+<meta name="author" content="David Johann Goetia" />
+<meta name="theme-color" content="#060607" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="David Johann Goetia" />
+<meta property="og:description" content="Building toward research in spatial intelligence and world models." />
+<meta property="og:url" content="https://davidjohanngoetia.com" />
+
+<style>
+  /* ============================================================
+     TOKENS
+     ============================================================ */
+  :root{
+    --void:   #060607;   /* near-black base                       */
+    --ink:    #0a0b0d;   /* section panels, a hair lighter        */
+    --smoke:  #ecedf0;   /* the light — name & headings           */
+    --mist:   #a7abb1;   /* body text                             */
+    --faint:  #565a60;   /* dim labels, hairlines                 */
+    --ghost:  #2a2d31;   /* rules, borders                        */
+    --teal:   #54d8ca;   /* accent — used in whispers only        */
+
+    --display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+    --measure: 56ch;
+    --pad: clamp(1.4rem, 5vw, 6rem);
+  }
+
+  /* ============================================================
+     RESET
+     ============================================================ */
+  *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+  body{
+    font-family:var(--display);
+    background:var(--void);
+    color:var(--mist);
+    line-height:1.6;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:rgba(84,216,202,.22); color:var(--smoke); }
+  :focus-visible{ outline:1px solid var(--teal); outline-offset:4px; }
+
+  /* ============================================================
+     ATMOSPHERE — the smoke
+     ============================================================ */
+  .atmosphere{
+    position:fixed; inset:0; z-index:-3;
+    background:var(--void);
+    overflow:hidden;
+  }
+  /* interactive particle field */
+  .field{ position:fixed; inset:0; width:100%; height:100%; z-index:-2; pointer-events:none; }
+  .blob{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(70px);
+    mix-blend-mode:screen;
+    will-change:transform;
+  }
+  .blob.a{
+    width:60vw; height:60vw; left:8%; top:-12%;
+    background:radial-gradient(circle at 40% 40%, rgba(232,234,238,.30), rgba(232,234,238,0) 62%);
+    animation:driftA 26s ease-in-out infinite alternate;
+  }
+  .blob.b{
+    width:48vw; height:48vw; right:2%; top:18%;
+    background:radial-gradient(circle at 50% 50%, rgba(150,158,170,.24), rgba(150,158,170,0) 60%);
+    animation:driftB 32s ease-in-out infinite alternate;
+  }
+  .blob.c{
+    width:70vw; height:34vw; left:18%; bottom:-14%;
+    background:radial-gradient(circle at 50% 50%, rgba(110,118,130,.18), rgba(110,118,130,0) 62%);
+    animation:driftC 38s ease-in-out infinite alternate;
+  }
+  @keyframes driftA{ to{ transform:translate(8vw,12vh) scale(1.15) rotate(12deg);} }
+  @keyframes driftB{ to{ transform:translate(-10vw,8vh) scale(1.08) rotate(-10deg);} }
+  @keyframes driftC{ to{ transform:translate(6vw,-8vh) scale(1.2);} }
+
+  /* organic grain over the light */
+  .grain{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    opacity:.45; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* vignette so the light gathers centrally */
+  .vignette{
+    position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background:radial-gradient(120% 80% at 50% 32%, transparent 38%, rgba(6,6,7,.55) 78%, var(--void) 100%);
+  }
+
+  /* ============================================================
+     NAV
+     ============================================================ */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.25rem var(--pad);
+    transition:background .4s ease, border-color .4s ease, backdrop-filter .4s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    background:rgba(6,6,7,.72);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--ghost);
+  }
+  .brand{ display:flex; align-items:center; gap:.65rem; color:var(--smoke); }
+  .brand .mark{ width:22px; height:22px; flex:none; }
+  .wordmark{
+    font-family:var(--display);
+    font-size:clamp(.9rem,2.2vw,1.02rem);
+    font-weight:400; letter-spacing:.02em;
+    color:var(--smoke); white-space:nowrap;
+  }
+  nav{ display:flex; gap:clamp(1.2rem,3vw,2.4rem); }
+  nav a{
+    font-family:var(--mono);
+    font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--mist);
+    position:relative; padding:.2rem 0;
+    transition:color .25s ease;
+  }
+  nav a::after{
+    content:""; position:absolute; left:0; bottom:-2px;
+    width:100%; height:1px; background:var(--teal);
+    transform:scaleX(0); transform-origin:left; transition:transform .3s ease;
+  }
+  nav a:hover{ color:var(--smoke); }
+  nav a:hover::after{ transform:scaleX(1); }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero{
+    position:relative;
+    min-height:100svh;
+    display:grid; place-items:center;
+    padding:6rem var(--pad) 3rem;
+    text-align:center;
+  }
+  .display{
+    font-weight:200;
+    font-size:min(7vw, 7.5rem);
+    line-height:1;
+    letter-spacing:.015em;
+    text-transform:uppercase;
+    white-space:nowrap;
+    color:var(--smoke);
+    margin:0 auto;
+  }
+  .tagline{
+    margin-top:clamp(1.4rem,3vw,2.2rem);
+    font-size:clamp(.95rem,1.6vw,1.18rem);
+    color:var(--mist);
+    font-weight:300;
+    letter-spacing:.01em;
+  }
+
+  /* scroll cue — echoes the reference */
+  .scrollcue{
+    position:absolute; bottom:2.4rem; left:50%; transform:translateX(-50%);
+    display:flex; align-items:center; gap:1rem; width:min(640px,72vw);
+    font-family:var(--mono); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--faint);
+  }
+  .scrollcue .rule{ flex:1; height:1px; background:linear-gradient(90deg, transparent, var(--ghost), transparent); }
+  .mouse{
+    width:17px; height:27px; border:1px solid var(--faint); border-radius:9px;
+    position:relative; flex:none;
+  }
+  .mouse::after{
+    content:""; position:absolute; left:50%; top:5px; width:2px; height:5px; border-radius:2px;
+    background:var(--mist); transform:translateX(-50%);
+    animation:wheel 1.8s ease-in-out infinite;
+  }
+  @keyframes wheel{ 0%,100%{ opacity:0; transform:translate(-50%,0);} 40%{ opacity:1;} 80%{ opacity:0; transform:translate(-50%,8px);} }
+
+  /* ============================================================
+     SECTIONS
+     ============================================================ */
+  main{ position:relative; z-index:1; }
+  .section{ padding:clamp(5rem,12vh,9rem) var(--pad); }
+  .eyebrow{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.26em; text-transform:uppercase;
+    color:var(--teal); opacity:.85; margin-bottom:1.6rem;
+    display:flex; align-items:center; gap:.8rem;
+  }
+  .eyebrow::before{ content:""; width:24px; height:1px; background:var(--teal); opacity:.6; }
+  .h2{
+    font-weight:200; color:var(--smoke);
+    font-size:clamp(1.7rem,4vw,2.8rem); line-height:1.1; letter-spacing:.01em;
+    max-width:20ch;
+  }
+  .lede{ max-width:var(--measure); margin-top:1.6rem; font-weight:300; font-size:clamp(1rem,1.5vw,1.12rem); }
+  .lede + .lede{ margin-top:1.1rem; }
+  .signature-line{
+    margin-top:2.2rem; font-family:var(--mono); font-size:.78rem; letter-spacing:.06em; color:var(--faint);
+  }
+  .signature-line em{ color:var(--mist); font-style:normal; }
+
+  /* research pillars — aligned rows, no boxes */
+  .pillars{ margin-top:3rem; border-top:1px solid var(--ghost); max-width:880px; }
+  .pillar{
+    display:grid; grid-template-columns:minmax(0,12rem) 1fr; gap:1rem 2.5rem;
+    padding:1.6rem 0; border-bottom:1px solid var(--ghost);
+    align-items:baseline;
+  }
+  .pillar .k{ font-family:var(--mono); font-size:.74rem; letter-spacing:.12em; text-transform:uppercase; color:var(--smoke); }
+  .pillar .v{ color:var(--mist); font-weight:300; }
+
+  /* perceive → act pipeline */
+  .pipeline{
+    display:flex; flex-wrap:wrap; align-items:center; gap:.7rem 1rem;
+    margin-top:2.6rem; font-family:var(--mono);
+    font-size:.74rem; letter-spacing:.16em; text-transform:uppercase;
+  }
+  .pipeline .stage{ color:var(--smoke); }
+  .pipeline .arr{ color:var(--teal); opacity:.8; }
+
+  /* ============================================================
+     FOCUS — the signature intersection
+     ============================================================ */
+  .focus{ text-align:center; }
+  .venn-wrap{
+    display:grid; place-items:center; max-width:560px; margin:2.8rem auto 0;
+    background:radial-gradient(circle at 50% 47%, rgba(84,216,202,.06), transparent 60%);
+  }
+  .venn{ width:min(460px, 88vw); height:auto; display:block; }
+  .venn .ring{ fill:none; stroke:var(--ghost); stroke-width:1; }
+  .venn .lobe{ fill:rgba(84,216,202,.05); stroke:rgba(167,171,177,.5); stroke-width:1; }
+  .venn text{ font-family:var(--mono); font-size:11px; letter-spacing:.18em; fill:#9aa0a7; text-transform:uppercase; dominant-baseline:central; }
+  .venn .core{ fill:url(#coreGlow); transform-box:fill-box; transform-origin:center; animation:pulse 5s ease-in-out infinite; }
+  .venn .cube{ fill:none; stroke:var(--teal); stroke-width:1; opacity:.9; transform-box:fill-box; transform-origin:center; }
+  .venn .cube.spin{ animation:spin 36s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  @keyframes pulse{ 0%,100%{ opacity:.85; transform:scale(1);} 50%{ opacity:1; transform:scale(1.05);} }
+  .focus .caption{ margin-top:2.2rem; color:var(--mist); font-weight:300; max-width:46ch; margin-inline:auto; }
+
+  /* ============================================================
+     CONTACT
+     ============================================================ */
+  .contact{ }
+  .contact .h2{ max-width:24ch; }
+  .links{ display:flex; flex-wrap:wrap; gap:1rem 2.5rem; margin-top:2.6rem; }
+  .biglink{
+    font-family:var(--mono); font-size:clamp(1.05rem,2.4vw,1.5rem); letter-spacing:.01em;
+    color:var(--smoke); display:inline-flex; align-items:center; gap:.5rem;
+    border-bottom:1px solid var(--ghost); padding-bottom:.35rem;
+    transition:border-color .3s ease, color .3s ease;
+  }
+  .biglink span.arrow{ color:var(--teal); transition:transform .3s ease; font-size:.85em; }
+  .biglink:hover{ border-color:var(--teal); }
+  .biglink:hover span.arrow{ transform:translate(3px,-3px); }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  footer{
+    padding:3rem var(--pad);
+    border-top:1px solid var(--ghost);
+    display:flex; flex-wrap:wrap; gap:1rem 2rem; align-items:center; justify-content:space-between;
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; color:var(--faint);
+  }
+  footer .motto{ color:var(--mist); }
+
+  /* ============================================================
+     REVEAL ON SCROLL
+     ============================================================ */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .9s ease, transform .9s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+  @media (max-width:560px){
+    .pillar{ grid-template-columns:1fr; gap:.4rem; }
+    nav{ display:none; }
+    .scrollcue{ width:84vw; }
+  }
+
+  /* ============================================================
+     REDUCED MOTION
+     ============================================================ */
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    .blob, .mouse::after, .venn .cube.spin, .venn .core{ animation:none !important; }
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- atmosphere -->
+  <div class="atmosphere" aria-hidden="true">
+    <div class="blob a"></div>
+    <div class="blob b"></div>
+    <div class="blob c"></div>
+  </div>
+  <canvas id="field" class="field" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- nav -->
+  <header id="site-header">
+    <a class="brand" href="#top" aria-label="David Johann Goetia — home">
+      <span class="wordmark">David Johann Goetia</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="#research">Research</a>
+      <a href="#focus">Focus</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <!-- hero -->
+  <section class="hero" id="top">
+    <div>
+      <h1 class="display">David Johann Goetia</h1>
+      <p class="tagline">Building toward research in spatial intelligence and world models.</p>
+    </div>
+    <a class="scrollcue" href="#about" aria-label="Scroll to read more">
+      <span>scroll</span>
+      <span class="rule"></span>
+      <span class="mouse" aria-hidden="true"></span>
+      <span class="rule"></span>
+      <span>research ↓</span>
+    </a>
+  </section>
+
+  <main>
+    <!-- about -->
+    <section class="section" id="about">
+      <p class="eyebrow reveal">About</p>
+      <h2 class="h2 reveal">Abstraction seeks a body.</h2>
+      <p class="lede reveal">
+        I work toward spatial intelligence: systems that build an internal model of the world and
+        reason within it before acting. My intent is to develop this from first principles, across
+        perception, world models, and embodied reasoning, toward machines that understand space
+        rather than react to it.
+      </p>
+    </section>
+
+    <!-- research -->
+    <section class="section" id="research">
+      <p class="eyebrow reveal">Research</p>
+      <h2 class="h2 reveal">INERA — a spatial-intelligence and embodied-AI project.</h2>
+      <p class="lede reveal">
+        An architecture that can perceive, model, simulate, and act in physical 3D space. The
+        principle is simple: <em>simulation before action</em>. Build an internal model of the
+        world, run possible moves forward, weigh their outcomes, then commit. Closer to world-model
+        robotics than to stimulus-response automation.
+      </p>
+
+      <div class="pipeline reveal" aria-label="Perceive, model, simulate, decide, act">
+        <span class="stage">Perceive</span><span class="arr">→</span>
+        <span class="stage">Model</span><span class="arr">→</span>
+        <span class="stage">Simulate</span><span class="arr">→</span>
+        <span class="stage">Decide</span><span class="arr">→</span>
+        <span class="stage">Act</span>
+      </div>
+
+      <div class="pillars reveal">
+        <div class="pillar">
+          <div class="k">Spatial Intelligence</div>
+          <div class="v">Geometry, distance, objects, and 3D structure as the substrate of thought.</div>
+        </div>
+        <div class="pillar">
+          <div class="k">World Models</div>
+          <div class="v">An internal representation that predicts how the environment will change.</div>
+        </div>
+        <div class="pillar">
+          <div class="k">Perception &amp; SLAM</div>
+          <div class="v">Localizing and mapping space in real time, from cameras, depth, and IMUs.</div>
+        </div>
+        <div class="pillar">
+          <div class="k">Simulation Before Action</div>
+          <div class="v">Running the model forward to choose a move, not merely react to one.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- focus — signature -->
+    <section class="section focus" id="focus">
+      <p class="eyebrow reveal" style="justify-content:center;">Focus</p>
+      <h2 class="h2 reveal" style="margin-inline:auto;">Where geometry, mind, and machine meet.</h2>
+
+      <div class="venn-wrap reveal">
+        <svg class="venn" viewBox="0 0 380 340" role="img" aria-label="Intersection of Physics, AI, and Philosophy">
+          <defs>
+            <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"  stop-color="#54d8ca" stop-opacity="0.9"/>
+              <stop offset="35%" stop-color="#54d8ca" stop-opacity="0.25"/>
+              <stop offset="100%" stop-color="#54d8ca" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- three lobes -->
+          <circle class="lobe" cx="140" cy="130" r="86"/>
+          <circle class="lobe" cx="240" cy="130" r="86"/>
+          <circle class="lobe" cx="190" cy="215" r="86"/>
+
+          <!-- faint concentric rings echoing the logo -->
+          <circle class="ring" cx="190" cy="158" r="30"/>
+          <circle class="ring" cx="190" cy="158" r="46"/>
+
+          <!-- luminous void core + ghost cube -->
+          <circle class="core" cx="190" cy="158" r="40"/>
+          <g transform="translate(172 140) scale(1.5)">
+            <path class="cube spin" d="M8 9.2 12 7l4 2.2v4.6L12 16l-4-2.2zM12 7v9M8 9.2l8 4.6M16 9.2l-8 4.6"/>
+          </g>
+
+          <!-- labels -->
+          <text x="110" y="113" text-anchor="middle">Physics</text>
+          <text x="270" y="113" text-anchor="middle">AI</text>
+          <text x="190" y="250" text-anchor="middle">Philosophy</text>
+        </svg>
+      </div>
+
+      <p class="caption reveal">
+        Spacetime as geometry, intelligence as machine, and the conditions that make either thinkable.
+        The work lives where the three meet.
+      </p>
+    </section>
+
+    <!-- contact -->
+    <section class="section contact" id="contact">
+      <p class="eyebrow reveal">Contact</p>
+      <h2 class="h2 reveal">Open to research, collaboration, and good arguments.</h2>
+      <div class="links reveal">
+        <a class="biglink" href="mailto:davidjohanngoetia@gmail.com">davidjohanngoetia@gmail.com</a>
+        <a class="biglink" href="https://github.com/DavidJohannGoetia" target="_blank" rel="noopener">GitHub <span class="arrow">↗</span></a>
+        <a class="biglink" href="https://www.instagram.com/davidjohanngoetia/" target="_blank" rel="noopener">Instagram <span class="arrow">↗</span></a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // nav background on scroll
+    const header = document.getElementById('site-header');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 40);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive:true });
+
+    // reveal on scroll
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const items = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      items.forEach(el => el.classList.add('in'));
+    } else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+      items.forEach(el => io.observe(el));
+    }
+
+    // interactive particle field — antigravity-inspired
+    (function(){
+      const canvas = document.getElementById('field');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d', { alpha: true });
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let W = 0, H = 0, DPR = 1, cx = 0, cy = 0, ringR = 0, raf = 0;
+      let parts = [];
+      const pointer = { x: 0, y: 0, active: false };
+
+      function resize(){
+        DPR = Math.min(window.devicePixelRatio || 1, 2);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        canvas.width = Math.round(W * DPR);
+        canvas.height = Math.round(H * DPR);
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        cx = W / 2; cy = H / 2;
+        ringR = Math.min(W, H) * 0.30;
+        seed();
+      }
+      function seed(){
+        const count = Math.max(40, Math.min(140, Math.round((W * H) / 14000)));
+        parts = [];
+        for (let i = 0; i < count; i++){
+          const ang = Math.random() * Math.PI * 2;
+          const rad = ringR + (Math.random() - 0.5) * ringR * 1.15;
+          const hx = cx + Math.cos(ang) * rad;
+          const hy = cy + Math.sin(ang) * rad;
+          parts.push({
+            hx, hy,
+            x: hx + (Math.random() - 0.5) * 90,
+            y: hy + (Math.random() - 0.5) * 90,
+            vx: 0, vy: 0,
+            r: 0.8 + Math.random() * 1.7,
+            a: 0.12 + Math.random() * 0.6,
+            teal: Math.random() < 0.28,
+            ph: Math.random() * Math.PI * 2,
+            sp: 0.004 + Math.random() * 0.006
+          });
+        }
+      }
+      function drawDots(){
+        for (const p of parts){
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.teal ? 'rgba(84,216,202,' + p.a + ')' : 'rgba(236,237,240,' + p.a + ')';
+          ctx.fill();
+        }
+      }
+      function frame(){
+        ctx.clearRect(0, 0, W, H);
+        for (const p of parts){
+          p.ph += p.sp;
+          const hx = p.hx + Math.cos(p.ph) * 11;
+          const hy = p.hy + Math.sin(p.ph * 0.9) * 11;
+          p.vx += (hx - p.x) * 0.008;
+          p.vy += (hy - p.y) * 0.008;
+          if (pointer.active){
+            const dx = p.x - pointer.x, dy = p.y - pointer.y;
+            const d2 = dx * dx + dy * dy;
+            const R = 135;
+            if (d2 < R * R){
+              const d = Math.sqrt(d2) || 1;
+              const f = (1 - d / R) * 2.6;
+              p.vx += (dx / d) * f;
+              p.vy += (dy / d) * f;
+            }
+          }
+          p.vx *= 0.92; p.vy *= 0.92;
+          p.x += p.vx; p.y += p.vy;
+        }
+        for (let i = 0; i < parts.length; i++){
+          const a = parts[i];
+          for (let j = i + 1; j < parts.length; j++){
+            const b = parts[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const d2 = dx * dx + dy * dy;
+            const L = 92;
+            if (d2 < L * L){
+              const al = (1 - Math.sqrt(d2) / L) * 0.09;
+              ctx.strokeStyle = 'rgba(150,158,168,' + al + ')';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+        }
+        drawDots();
+        raf = requestAnimationFrame(frame);
+      }
+
+      function onMove(x, y){ pointer.x = x; pointer.y = y; pointer.active = true; }
+      window.addEventListener('pointermove', e => onMove(e.clientX, e.clientY), { passive: true });
+      window.addEventListener('pointerleave', () => { pointer.active = false; });
+      window.addEventListener('touchmove', e => { const t = e.touches[0]; if (t) onMove(t.clientX, t.clientY); }, { passive: true });
+      window.addEventListener('touchend', () => { pointer.active = false; });
+
+      function fade(){
+        const vh = window.innerHeight || 1;
+        const s = Math.min(window.scrollY / (vh * 0.85), 1);
+        canvas.style.opacity = (1 - s * 0.82).toFixed(3);
+      }
+      window.addEventListener('scroll', fade, { passive: true });
+      window.addEventListener('resize', () => { resize(); if (reduceMotion){ ctx.clearRect(0,0,W,H); drawDots(); } });
+
+      resize(); fade();
+      if (reduceMotion){
+        ctx.clearRect(0, 0, W, H); drawDots();
+      } else {
+        raf = requestAnimationFrame(frame);
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden){ cancelAnimationFrame(raf); raf = 0; }
+          else if (!raf){ raf = requestAnimationFrame(frame); }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
